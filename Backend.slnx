@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="FutData.API/FutData.API.csproj" Id="c3ea567e-356e-4016-9ea4-8d3c81b1d172" />
+  <Project Path="FutData.Application/FutData.Application.csproj" Id="47498b8e-bdac-4020-97d7-cc00b777e781" />
+  <Project Path="FutData.Domain/FutData.Domain.csproj" Id="d43a0f90-6a9c-4729-a3ca-a64300e5d4ca" />
+  <Project Path="FutData.Infraestructure/FutData.Infraestructure.csproj" Id="b37417fc-427a-4b31-bddf-75f6a542e875" />
+  <Project Path="FutData.Tests/FutData.Tests.csproj" Id="139d122a-a7e9-4fe9-ac50-7186a7a3c9d6" />
+</Solution>
