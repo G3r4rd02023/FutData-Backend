@@ -5,9 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FutData.Infraestructure.Repositories
 {
-    public class UserRepository(FutDataDbContext context) : IUserRepository
+    public class UserRepository : IUserRepository
     {
-        private readonly FutDataDbContext _context = context;
+        private readonly FutDataDbContext _context;
+
+        public UserRepository(FutDataDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task<User?> GetByIdAsync(Guid id)
         {

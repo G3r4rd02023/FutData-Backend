@@ -8,9 +8,14 @@ using System.Text;
 
 namespace FutData.Infraestructure.Services
 {
-    public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerator
+    public class JwtTokenGenerator : IJwtTokenGenerator
     {
-        private readonly IConfiguration _configuration = configuration;
+        private readonly IConfiguration _configuration;
+
+        public JwtTokenGenerator(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public string GenerateToken(User user)
         {

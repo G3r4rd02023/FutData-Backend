@@ -4,9 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FutData.Infraestructure.Data
 {
-    public class FutDataDbContext(DbContextOptions<FutDataDbContext> options) : DbContext(options)
+    public class FutDataDbContext : DbContext
     {
+        public FutDataDbContext(DbContextOptions<FutDataDbContext> options) : base(options)
+        {
+        }
+
         public DbSet<User> Users => Set<User>();
+        public DbSet<Team> Teams => Set<Team>();
+        public DbSet<Match> Matches => Set<Match>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +42,32 @@ namespace FutData.Infraestructure.Data
                     UpdatedAt = new DateTime(2026, 9, 1)
                 }
             );
+
+            modelBuilder.Entity<Team>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.City).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Stadium).HasMaxLength(100);
+                entity.Property(e => e.LogoUrl).HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<Match>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Notes).HasMaxLength(500);
+                entity.Property(e => e.Status).HasConversion<string>().HasMaxLength(20);
+
+                entity.HasOne(e => e.HomeTeam)
+                    .WithMany()
+                    .HasForeignKey(e => e.HomeTeamId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.AwayTeam)
+                    .WithMany()
+                    .HasForeignKey(e => e.AwayTeamId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         }
     }
 }

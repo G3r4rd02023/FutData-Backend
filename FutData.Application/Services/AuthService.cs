@@ -5,10 +5,16 @@ using FutData.Domain.Enums;
 
 namespace FutData.Application.Services
 {
-    public class AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator) : IAuthService
+    public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository = userRepository;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+        private readonly IUserRepository _userRepository;
+        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+
+        public AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+        {
+            _userRepository = userRepository;
+            _jwtTokenGenerator = jwtTokenGenerator;
+        }
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
         {
@@ -89,7 +95,7 @@ namespace FutData.Application.Services
         public async Task<List<UserProfileDto>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllAsync();
-            return [.. users.Select(MapToProfile)];
+            return users.Select(MapToProfile).ToList();
         }
 
         public async Task<UserProfileDto> UpdateUserRoleAsync(Guid userId, UserRole role)
