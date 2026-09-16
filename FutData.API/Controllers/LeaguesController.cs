@@ -10,10 +10,12 @@ namespace FutData.API.Controllers
     public class LeaguesController : ControllerBase
     {
         private readonly ILeagueService _leagueService;
+        private readonly IRankingService _rankingService;
 
-        public LeaguesController(ILeagueService leagueService)
+        public LeaguesController(ILeagueService leagueService, IRankingService rankingService)
         {
             _leagueService = leagueService;
+            _rankingService = rankingService;
         }
 
         [HttpGet]
@@ -143,6 +145,14 @@ namespace FutData.API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [Authorize]
+        [HttpGet("{id:guid}/standings")]
+        public async Task<IActionResult> GetStandings(Guid id)
+        {
+            var standings = await _rankingService.GetLeagueStandingsAsync(id);
+            return Ok(standings);
         }
     }
 }
