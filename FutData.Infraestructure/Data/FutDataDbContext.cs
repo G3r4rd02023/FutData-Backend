@@ -13,6 +13,8 @@ namespace FutData.Infraestructure.Data
         public DbSet<User> Users => Set<User>();
         public DbSet<Team> Teams => Set<Team>();
         public DbSet<Match> Matches => Set<Match>();
+        public DbSet<League> Leagues => Set<League>();
+        public DbSet<LeagueTeam> LeagueTeams => Set<LeagueTeam>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +69,36 @@ namespace FutData.Infraestructure.Data
                     .WithMany()
                     .HasForeignKey(e => e.AwayTeamId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.League)
+                    .WithMany()
+                    .HasForeignKey(e => e.LeagueId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<League>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(150);
+                entity.Property(e => e.Description).HasMaxLength(500);
+                entity.Property(e => e.Format).HasConversion<string>().HasMaxLength(20);
+                entity.Property(e => e.Status).HasConversion<string>().HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<LeagueTeam>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.LeagueId, e.TeamId }).IsUnique();
+
+                entity.HasOne(e => e.League)
+                    .WithMany()
+                    .HasForeignKey(e => e.LeagueId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Team)
+                    .WithMany()
+                    .HasForeignKey(e => e.TeamId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

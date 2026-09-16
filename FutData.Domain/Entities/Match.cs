@@ -19,5 +19,6 @@ namespace FutData.Domain.Entities
 
         public Team HomeTeam { get; set; } = null!;
         public Team AwayTeam { get; set; } = null!;
+        public League League { get; set; } = null!;
     }
 }
