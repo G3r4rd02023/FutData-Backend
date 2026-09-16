@@ -19,10 +19,13 @@ namespace FutData.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12,
+            [FromQuery] string? search = null)
         {
-            var leagues = await _leagueService.GetAllAsync();
-            return Ok(leagues);
+            var result = await _leagueService.GetAllPagedAsync(page, pageSize, search);
+            return Ok(result);
         }
 
         [HttpGet("{id:guid}")]

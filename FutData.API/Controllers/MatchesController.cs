@@ -25,7 +25,9 @@ namespace FutData.API.Controllers
             [FromQuery] DateTime? dateFrom,
             [FromQuery] DateTime? dateTo,
             [FromQuery] MatchStatus? status,
-            [FromQuery] int? round)
+            [FromQuery] int? round,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12)
         {
             var filters = new MatchFilterDto
             {
@@ -37,8 +39,8 @@ namespace FutData.API.Controllers
                 Round = round
             };
 
-            var matches = await _matchService.GetAllAsync(filters);
-            return Ok(matches);
+            var result = await _matchService.GetAllPagedAsync(page, pageSize, filters);
+            return Ok(result);
         }
 
         [Authorize]

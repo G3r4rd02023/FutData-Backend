@@ -7,6 +7,7 @@ namespace FutData.Application.Interfaces
         Task<Team?> GetByIdAsync(Guid id);
         Task<List<Team>> GetAllAsync();
         Task<List<Team>> SearchAsync(string? searchTerm);
+        Task<(List<Team> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize, string? searchTerm = null);
         Task AddAsync(Team team);
         Task UpdateAsync(Team team);
         Task DeleteAsync(Team team);

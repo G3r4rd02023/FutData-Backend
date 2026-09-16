@@ -41,6 +41,28 @@ namespace FutData.Infraestructure.Repositories
             return await query.OrderBy(t => t.Name).ToListAsync();
         }
 
+        public async Task<(List<Team> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize, string? searchTerm = null)
+        {
+            var query = _context.Teams.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var term = searchTerm.ToLower();
+                query = query.Where(t =>
+                    t.Name.ToLower().Contains(term) ||
+                    t.City.ToLower().Contains(term));
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .OrderBy(t => t.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task AddAsync(Team team)
         {
             _context.Teams.Add(team);

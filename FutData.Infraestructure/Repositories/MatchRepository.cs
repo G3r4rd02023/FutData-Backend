@@ -56,6 +56,45 @@ namespace FutData.Infraestructure.Repositories
             return await query.OrderByDescending(m => m.MatchDate).ToListAsync();
         }
 
+        public async Task<(IEnumerable<Match> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize, MatchFilterDto? filters = null)
+        {
+            var query = _context.Matches
+                .Include(m => m.HomeTeam)
+                .Include(m => m.AwayTeam)
+                .Include(m => m.League)
+                .AsQueryable();
+
+            if (filters != null)
+            {
+                if (filters.LeagueId.HasValue)
+                    query = query.Where(m => m.LeagueId == filters.LeagueId.Value);
+
+                if (filters.TeamId.HasValue)
+                    query = query.Where(m => m.HomeTeamId == filters.TeamId.Value || m.AwayTeamId == filters.TeamId.Value);
+
+                if (filters.DateFrom.HasValue)
+                    query = query.Where(m => m.MatchDate >= filters.DateFrom.Value);
+
+                if (filters.DateTo.HasValue)
+                    query = query.Where(m => m.MatchDate <= filters.DateTo.Value);
+
+                if (filters.Status.HasValue)
+                    query = query.Where(m => m.Status == filters.Status.Value);
+
+                if (filters.Round.HasValue)
+                    query = query.Where(m => m.Round == filters.Round.Value);
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .OrderByDescending(m => m.MatchDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task<bool> ExistsDuplicateAsync(Guid leagueId, Guid homeTeamId, Guid awayTeamId, DateTime matchDate, Guid? excludeId = null)
         {
             return await _context.Matches

@@ -96,6 +96,38 @@ namespace FutData.Application.Services
             return result;
         }
 
+        public async Task<PaginatedResult<LeagueDto>> GetAllPagedAsync(int page, int pageSize, string? searchTerm = null)
+        {
+            var (leagues, totalCount) = await _leagueRepository.GetAllPagedAsync(page, pageSize, searchTerm);
+            var items = new List<LeagueDto>();
+
+            foreach (var league in leagues)
+            {
+                var teamsCount = await _leagueRepository.GetTeamCountAsync(league.Id);
+
+                items.Add(new LeagueDto
+                {
+                    Id = league.Id,
+                    Name = league.Name,
+                    Description = league.Description,
+                    Format = league.Format,
+                    Status = league.Status,
+                    StartDate = league.StartDate,
+                    EndDate = league.EndDate,
+                    TeamsCount = teamsCount,
+                    CreatedAt = league.CreatedAt
+                });
+            }
+
+            return new PaginatedResult<LeagueDto>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize
+            };
+        }
+
         public async Task<LeagueDetailDto> CreateAsync(CreateLeagueDto dto)
         {
             if (await _leagueRepository.ExistsByNameAsync(dto.Name))

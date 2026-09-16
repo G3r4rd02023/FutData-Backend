@@ -1,5 +1,4 @@
 using FutData.Application.DTOs;
-using FutData.Domain.Entities;
 
 namespace FutData.Application.Interfaces
 {
@@ -8,6 +7,7 @@ namespace FutData.Application.Interfaces
         Task<LeagueDetailDto?> GetByIdAsync(Guid id);
         Task<IEnumerable<LeagueDto>> GetAllAsync();
         Task<IEnumerable<LeagueDto>> SearchAsync(string searchTerm);
+        Task<PaginatedResult<LeagueDto>> GetAllPagedAsync(int page, int pageSize, string? searchTerm = null);
         Task<LeagueDetailDto> CreateAsync(CreateLeagueDto dto);
         Task<LeagueDetailDto?> UpdateAsync(Guid id, UpdateLeagueDto dto);
         Task<bool> DeleteAsync(Guid id);

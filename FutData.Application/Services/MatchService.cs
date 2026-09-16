@@ -26,6 +26,18 @@ namespace FutData.Application.Services
             return matches.Select(MapToDto);
         }
 
+        public async Task<PaginatedResult<MatchDto>> GetAllPagedAsync(int page, int pageSize, MatchFilterDto? filters = null)
+        {
+            var (matches, totalCount) = await _matchRepository.GetAllPagedAsync(page, pageSize, filters);
+            return new PaginatedResult<MatchDto>
+            {
+                Items = matches.Select(MapToDto).ToList(),
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize
+            };
+        }
+
         public async Task<MatchDto> CreateAsync(CreateMatchDto dto)
         {
             if (dto.HomeTeamId == dto.AwayTeamId)

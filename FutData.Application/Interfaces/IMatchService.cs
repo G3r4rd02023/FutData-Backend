@@ -6,6 +6,7 @@ namespace FutData.Application.Interfaces
     {
         Task<MatchDto?> GetByIdAsync(Guid id);
         Task<IEnumerable<MatchDto>> GetAllAsync(MatchFilterDto? filters);
+        Task<PaginatedResult<MatchDto>> GetAllPagedAsync(int page, int pageSize, MatchFilterDto? filters = null);
         Task<MatchDto> CreateAsync(CreateMatchDto dto);
         Task<MatchDto?> UpdateAsync(Guid id, UpdateMatchDto dto);
         Task<MatchDto?> RegisterResultAsync(Guid id, ResultDto dto);

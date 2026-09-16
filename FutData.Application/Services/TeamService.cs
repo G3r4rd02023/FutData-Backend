@@ -31,6 +31,18 @@ namespace FutData.Application.Services
             return teams.Select(MapToDto).ToList();
         }
 
+        public async Task<PaginatedResult<TeamDto>> GetAllPagedAsync(int page, int pageSize, string? searchTerm = null)
+        {
+            var (teams, totalCount) = await _teamRepository.GetAllPagedAsync(page, pageSize, searchTerm);
+            return new PaginatedResult<TeamDto>
+            {
+                Items = teams.Select(MapToDto).ToList(),
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize
+            };
+        }
+
         public async Task<TeamDto> CreateAsync(CreateTeamDto dto)
         {
             if (await _teamRepository.ExistsByNameAsync(dto.Name))

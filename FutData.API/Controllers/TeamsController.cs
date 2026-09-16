@@ -20,12 +20,13 @@ namespace FutData.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TeamDto>>> GetAll([FromQuery] string? search)
+        public async Task<ActionResult> GetAll(
+            [FromQuery] string? search,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12)
         {
-            var teams = string.IsNullOrWhiteSpace(search)
-                ? await _teamService.GetAllAsync()
-                : await _teamService.SearchAsync(search);
-            return Ok(teams);
+            var result = await _teamService.GetAllPagedAsync(page, pageSize, search);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

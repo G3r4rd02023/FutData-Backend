@@ -8,6 +8,7 @@ namespace FutData.Application.Interfaces
         Task<League?> GetByNameAsync(string name);
         Task<IEnumerable<League>> GetAllAsync();
         Task<IEnumerable<League>> SearchAsync(string searchTerm);
+        Task<(IEnumerable<League> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize, string? searchTerm = null);
         Task<bool> ExistsByNameAsync(string name, Guid? excludeId = null);
         Task<int> GetTeamCountAsync(Guid leagueId);
         Task<List<Team>> GetTeamsByLeagueAsync(Guid leagueId);

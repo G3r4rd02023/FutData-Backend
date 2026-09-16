@@ -7,6 +7,7 @@ namespace FutData.Application.Interfaces
     {
         Task<Match?> GetByIdAsync(Guid id);
         Task<IEnumerable<Match>> GetAllAsync(MatchFilterDto? filters);
+        Task<(IEnumerable<Match> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize, MatchFilterDto? filters = null);
         Task<bool> ExistsDuplicateAsync(Guid leagueId, Guid homeTeamId, Guid awayTeamId, DateTime matchDate, Guid? excludeId = null);
         Task<bool> TeamsAreInLeagueAsync(Guid leagueId, Guid homeTeamId, Guid awayTeamId);
         Task<TeamLeagueStats?> GetStatsAsync(Guid teamId, Guid leagueId);

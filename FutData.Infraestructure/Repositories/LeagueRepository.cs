@@ -37,6 +37,27 @@ namespace FutData.Infraestructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<(IEnumerable<League> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize, string? searchTerm = null)
+        {
+            var query = _context.Leagues.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(l =>
+                    l.Name.Contains(searchTerm) ||
+                    (l.Description != null && l.Description.Contains(searchTerm)));
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .OrderBy(l => l.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task<bool> ExistsByNameAsync(string name, Guid? excludeId = null)
         {
             return await _context.Leagues
