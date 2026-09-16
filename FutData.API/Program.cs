@@ -49,12 +49,11 @@ builder.Services.AddAuthorization();
 // Configure CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", policy =>
+    options.AddPolicy("VercelFrontend", policy =>
     {
-        policy.WithOrigins("https://futdata-two.vercel.app")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+        policy.WithOrigins("https://futdata-two.vercel.app") 
+              .AllowAnyMethod()                             
+              .AllowAnyHeader();                            
     });
 });
 
@@ -89,7 +88,9 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowReactApp");
+app.UseRouting();
+
+app.UseCors("VercelFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
