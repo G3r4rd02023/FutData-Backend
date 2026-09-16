@@ -66,6 +66,8 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IImageService, CloudinaryService>();
 builder.Services.AddScoped<ILeagueRepository, LeagueRepository>();
 builder.Services.AddScoped<ILeagueService, LeagueService>();
+builder.Services.AddScoped<IMatchRepository, MatchRepository>();
+builder.Services.AddScoped<IMatchService, MatchService>();
 
 var app = builder.Build();
 

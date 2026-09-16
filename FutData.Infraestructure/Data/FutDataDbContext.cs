@@ -15,6 +15,7 @@ namespace FutData.Infraestructure.Data
         public DbSet<Match> Matches => Set<Match>();
         public DbSet<League> Leagues => Set<League>();
         public DbSet<LeagueTeam> LeagueTeams => Set<LeagueTeam>();
+        public DbSet<TeamLeagueStats> TeamLeagueStats => Set<TeamLeagueStats>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -99,6 +100,22 @@ namespace FutData.Infraestructure.Data
                     .WithMany()
                     .HasForeignKey(e => e.TeamId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<TeamLeagueStats>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.TeamId, e.LeagueId }).IsUnique();
+
+                entity.HasOne(e => e.Team)
+                    .WithMany()
+                    .HasForeignKey(e => e.TeamId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.League)
+                    .WithMany()
+                    .HasForeignKey(e => e.LeagueId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }
