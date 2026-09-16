@@ -51,9 +51,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("VercelFrontend", policy =>
     {
-        policy.WithOrigins("https://futdata-two.vercel.app") 
-              .AllowAnyMethod()                             
-              .AllowAnyHeader();                            
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
@@ -81,10 +81,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
+
 
 app.UseHttpsRedirection();
 
